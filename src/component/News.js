@@ -26,7 +26,7 @@ const News = (props) => {
     props.setProgress(10);
 
     // Updated fetch URL pointing to your backend/serverless function
-    const url = `/api/news?country=${props.country}&category=${props.category}&page=${page}&pageSize=${props.pageSize}`;
+    const url = `/api/getNews?country=${props.country}&category=${props.category}&page=${page}&pageSize=${props.pageSize}`;
 
     setLoading(true);
 
