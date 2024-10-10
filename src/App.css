@@ -1,3 +1,19 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.container {
+  min-height: 100vh; /* Ensures the container has enough height */
+  padding-bottom: 2rem; /* Adds space at the bottom for scroll */
+}
+
+.infinite-scroll-component__outerdiv {
+  overflow: auto; /* Allow scrolling */
+  height: auto; /* Ensures scrolling triggers */
+}
+
+
 .App {
   text-align: center;
 }
