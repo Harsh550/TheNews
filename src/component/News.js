@@ -1,24 +1,19 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
-
-
-// import loog from './image/loog.png';
 
 const News = (props) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  const [initialLoadDone, setInitialLoadDone] = useState(false);
-
 
   News.defaultProps = {
     country: "in",
     pageSize: 8,
-    category: "genreal",
+    category: "general",
   };
 
   News.propTypes = {
@@ -27,71 +22,86 @@ const News = (props) => {
     category: PropTypes.string,
   };
 
-   
-
   const updateNews = async () => {
     props.setProgress(10);
-  
-    const url = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(props.apiKey)}&categories=${encodeURIComponent('general')}&search=${encodeURIComponent(props.country)}&limit=3&page=1`;
-  
+    
     setLoading(true);
-  
+
     try {
-      let response = await fetch(url);
+      // Fetch 6 articles on first load (2 pages of 3 articles each)
+      const url1 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
+        props.apiKey
+      )}&categories=${encodeURIComponent('general')}&search=${encodeURIComponent(
+        props.country
+      )}&limit=3&page=1`;
+
+      const url2 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
+        props.apiKey
+      )}&categories=${encodeURIComponent('general')}&search=${encodeURIComponent(
+        props.country
+      )}&limit=3&page=2`;
+
+      // First API request for 3 articles
+      let response1 = await fetch(url1);
       props.setProgress(30);
-  
-      let parsedData = await response.json();
+      let parsedData1 = await response1.json();
+      props.setProgress(50);
+
+      // Second API request for 3 more articles
+      let response2 = await fetch(url2);
+      let parsedData2 = await response2.json();
       props.setProgress(70);
-  
-      // Update articles with parsedData.data, not parsedData.articles
-      setArticles(parsedData.data); 
-      setTotalResults(parsedData.meta.found); // total results are in parsedData.meta.found
-  
+
+      // Combine both responses and update the state
+      setArticles([...parsedData1.data, ...parsedData2.data]);
+      setTotalResults(parsedData1.meta.found); // Assuming both have the same total results
+
       setLoading(false);
       props.setProgress(100);
-    } 
-    catch (error) {
-      console.error('Error fetching the news:', error);
+    } catch (error) {
+      console.error("Error fetching the news:", error);
       setLoading(false);
       props.setProgress(100);
     }
   };
-  
+
   useEffect(() => {
-    updateNews(); 
+    updateNews();
   }, [props.category, props.country]);
-  
-  
-  const fetchMoreData = async () => {  
-    setLoading(true);
-    const nextPage = page + 1; 
+
+  const fetchMoreData = async () => {
+    const nextPage = page + 1;
     setPage(nextPage);
-  
-    const url = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(props.apiKey)}&categories=${encodeURIComponent('general')}&search=${encodeURIComponent(props.country)}&limit=3&page=${nextPage}`;
-  
+
+    // Fetch 3 more articles
+    const url = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
+      props.apiKey
+    )}&categories=${encodeURIComponent('general')}&search=${encodeURIComponent(
+      props.country
+    )}&limit=3&page=${nextPage}`;
+
     let data = await fetch(url);
     let parsedData = await data.json();
-  
-    // Concatenate with parsedData.data, not parsedData.articles
-    setArticles(articles.concat(parsedData.data)); 
-    setTotalResults(parsedData.meta.found); // total results are in parsedData.meta.found
-    setLoading(false);
+
+    setArticles(articles.concat(parsedData.data));
+    setTotalResults(parsedData.meta.found);
   };
-  
+
   return (
     <>
       <h1 className="text-center" style={{ marginTop: "80px" }}>
-        News Monkey - {props.category.charAt(0).toUpperCase() + props.category.slice(1)} {/* Displaying the selected category */}
+        News Monkey - {props.category.charAt(0).toUpperCase() + props.category.slice(1)}
       </h1>
+
       {loading && page === 1 && <Spinner />}
-      {articles && (
+
       <InfiniteScroll
         className="container"
         style={{ overflow: "hidden" }}
         dataLength={articles.length}
         next={fetchMoreData}
         hasMore={articles.length < totalResults}
-        loader={loading && <Spinner />}
+        loader={<Spinner />}
         scrollThreshold={0.8}
       >
         <div className="container text-center">
@@ -114,13 +124,12 @@ const News = (props) => {
           </div>
         </div>
       </InfiniteScroll>
-      )}
     </>
   );
-  
-        
-  
 };
+
+
+
 
 // ??????????????????????????????????????????????????????????????????????????????????????????????????
 {
