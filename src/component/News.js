@@ -128,37 +128,4 @@ const News = (props) => {
     </>
   );
 };
-
-
-
-
-// ??????????????????????????????????????????????????????????????????????????????????????????????????
-{
-  /* {!this.state.loading && this.state.articles?.map((element) => {
-              return (
-                <div className="col-md-3" key={element.url}>
-                  <NewsItem
-                    title={element.title ? element.title.slice(0, 60) : ""}
-                    description={
-                      element.description
-                        ? element.description.slice(0, 100)
-                        : ""
-                    }
-                    imageUrl={
-                      element.urlToImage
-                        ? element.urlToImage
-                        : "https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
-                    }
-                    newsUrl={element.url}
-                    author={element.author}
-                    date= {element.publishedAt}
-                    source= {element.source.name}
-            
-                  />
-                  
-                </div>
-              )}
-            )} */
-}
-
 export default News;
