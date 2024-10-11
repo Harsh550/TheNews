@@ -31,13 +31,13 @@ const News = (props) => {
       // Fetch 6 articles on first load (2 pages of 3 articles each)
       const url1 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
         props.apiKey
-      )}&categories=${encodeURIComponent('general')}&search=${encodeURIComponent(
+      )}&categories=${encodeURIComponent('general')}&locale=${encodeURIComponent(
         props.country
       )}&limit=3&page=1`;
 
       const url2 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
         props.apiKey
-      )}&categories=${encodeURIComponent('general')}&search=${encodeURIComponent(
+      )}&categories=${encodeURIComponent('general')}&locale=${encodeURIComponent(
         props.country
       )}&limit=3&page=2`;
 
@@ -76,7 +76,7 @@ const News = (props) => {
     // Fetch 3 more articles
     const url = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
       props.apiKey
-    )}&categories=${encodeURIComponent('general')}&search=${encodeURIComponent(
+    )}&categories=${encodeURIComponent('general')}&locale=${encodeURIComponent(
       props.country
     )}&limit=3&page=${nextPage}`;
 
