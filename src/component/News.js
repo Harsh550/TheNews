@@ -67,6 +67,7 @@ const News = (props) => {
 
   useEffect(() => {
     updateNews();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.category, props.country]);
 
   const fetchMoreData = async () => {
