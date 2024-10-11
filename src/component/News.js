@@ -29,17 +29,9 @@ const News = (props) => {
 
     try {
       // Fetch 6 articles on first load (2 pages of 3 articles each)
-      const url1 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
-        props.apiKey
-      )}&categories=${encodeURIComponent('general')}&locale=${encodeURIComponent(
-        props.country
-      )}&limit=3&page=1`;
+      const url1 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(props.apiKey)}&language=en&limit=3&page=1&categories=${encodeURIComponent(props.category)}`;
 
-      const url2 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
-        props.apiKey
-      )}&categories=${encodeURIComponent('general')}&locale=${encodeURIComponent(
-        props.country
-      )}&limit=3&page=2`;
+      const url2 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(props.apiKey)}&language=en&limit=3&page=2&categories=${encodeURIComponent(props.category)}`;
 
       // First API request for 3 articles
       let response1 = await fetch(url1);
@@ -58,10 +50,14 @@ const News = (props) => {
 
       setLoading(false);
       props.setProgress(100);
+      console.log(parsedData1.data);
+      console.log(parsedData2.data);
     } catch (error) {
       console.error("Error fetching the news:", error);
       setLoading(false);
       props.setProgress(100);
+      
+
     }
   };
 
@@ -76,10 +72,7 @@ const News = (props) => {
 
     // Fetch 3 more articles
     const url = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
-      props.apiKey
-    )}&categories=${encodeURIComponent('general')}&locale=${encodeURIComponent(
-      props.country
-    )}&limit=3&page=${nextPage}`;
+      props.apiKey)}&language=en&limit=3&page=${nextPage}&categories=${encodeURIComponent(props.category)}`;
 
     let data = await fetch(url);
     let parsedData = await data.json();

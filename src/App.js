@@ -28,10 +28,10 @@ const App =()=>{
               element={
                 <News
                   setProgress={setProgress} apiKey={apiKey}
-                  key="General"
+                  key="general"
                   pageSize={pageSize}
                   country="in"
-                  category="General"
+                  category="general"
                 />
               }
             ></Route>
@@ -43,7 +43,7 @@ const App =()=>{
                   key="Business"
                   pageSize={pageSize}
                   country="in"
-                  category="Business"
+                  category="business"
                 />
               }
             ></Route>
@@ -55,31 +55,20 @@ const App =()=>{
                   key="Entertainment"
                   pageSize={pageSize}
                   country="in"
-                  category="Entertainment"
+                  category="entertainment"
                 />
               }
             ></Route>
-            <Route
-              path="/health"
-              element={
-                <News
-                  setProgress={setProgress} apiKey={apiKey}
-                  key="Health"
-                  pageSize={pageSize}
-                  country="in"
-                  category="Health"
-                />
-              }
-            ></Route>
+            
             <Route
               path="/science"
               element={
                 <News
                   setProgress={setProgress} apiKey={apiKey}
-                  key="Science"
+                  key="science"
                   pageSize={pageSize}
                   country="in"
-                  category="Science"
+                  category="science"
                 />
               }
             ></Route>
@@ -91,19 +80,19 @@ const App =()=>{
                   key="Sports"
                   pageSize={pageSize}
                   country="in"
-                  category="Sports"
+                  category="sports"
                 />
               }
             ></Route>
             <Route
-              path="/technology"
+              path="/tech"
               element={
                 <News
                   setProgress={setProgress} apiKey={apiKey}
-                  key="Technology"
+                  key="tech"
                   pageSize={pageSize}
                   country="in"
-                  category="Technology"
+                  category="tech"
                 />
               }
             ></Route>

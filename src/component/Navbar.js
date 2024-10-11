@@ -38,11 +38,7 @@ export default function navBar(){
                     Entertainment
                   </Link>
                 </li> 
-                <li className="nav-item">
-                  <Link className="nav-link" to="/health">
-                    Health
-                  </Link>
-                </li>   <li className="nav-item">
+                   <li className="nav-item">
                   <Link className="nav-link" to="/science">
                     Science
                   </Link>
@@ -51,7 +47,7 @@ export default function navBar(){
                     Sports
                   </Link>
                 </li>   <li className="nav-item">
-                  <Link className="nav-link" to="/technology">
+                  <Link className="nav-link" to="/tech">
                     Technology
                   </Link>
                 </li>   
