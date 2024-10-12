@@ -66,21 +66,25 @@ const News = (props) => {
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.category, props.country]);
 
-  const fetchMoreData = async () => {
-    const nextPage = page + 1; 
-    setPage(nextPage);
+const fetchMoreData = async () => {
+  const nextPage = page + 1;  // Increment the page number
+  setPage(nextPage);
 
-    // Fetch 3 more articles
-    const url = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
-      props.apiKey)}&language=en&limit=3&page=${nextPage}&categories=${encodeURIComponent(props.category)}`;
+  const url = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
+    props.apiKey)}&language=en&limit=3&page=${nextPage}&categories=${encodeURIComponent(props.category)}`;
 
-    let data = await fetch(url);
-    let parsedData = await data.json();
+  let data = await fetch(url);
+  let parsedData = await data.json();
 
-    setArticles(articles.concat(parsedData.data));
-    setTotalResults(parsedData.meta.found);
-   
-  };
+  // Filter out duplicates based on unique `url` (or any other unique property like `id`)
+  const newArticles = parsedData.data.filter(
+    (newArticle) => !articles.some((existingArticle) => existingArticle.url === newArticle.url)
+  );
+
+  setArticles([...articles, ...newArticles]);  // Append only unique articles to the list
+  setTotalResults(parsedData.meta.found);
+};
+
 
   return (
     <>
