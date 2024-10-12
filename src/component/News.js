@@ -76,12 +76,7 @@ const fetchMoreData = async () => {
   let data = await fetch(url);
   let parsedData = await data.json();
 
-  // Filter out duplicates based on unique `url` (or any other unique property like `id`)
-  const newArticles = parsedData.data.filter(
-    (newArticle) => !articles.some((existingArticle) => existingArticle.url === newArticle.url)
-  );
-
-  setArticles([...articles, ...newArticles]);  // Append only unique articles to the list
+   setArticles([...parsedData.data]);
   setTotalResults(parsedData.meta.found);
 };
 
