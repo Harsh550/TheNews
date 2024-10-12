@@ -67,7 +67,7 @@ const News = (props) => {
   }, [props.category, props.country]);
 
   const fetchMoreData = async () => {
-    const nextPage = 3;
+    const nextPage = page + 1; 
     setPage(nextPage);
 
     // Fetch 3 more articles
@@ -79,7 +79,7 @@ const News = (props) => {
 
     setArticles(articles.concat(parsedData.data));
     setTotalResults(parsedData.meta.found);
-    nextPage = +1;
+   
   };
 
   return (
