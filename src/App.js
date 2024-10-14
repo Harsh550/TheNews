@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
 
 const App =()=>{
-   const pageSize = 8;
+  
    const apiKey = process.env.REACT_APP_API;
 
     const [progress, setProgress]= useState(0);
@@ -29,7 +29,7 @@ const App =()=>{
                 <News
                   setProgress={setProgress} apiKey={apiKey}
                   key="general"
-                  pageSize={pageSize}
+                  
                   country="in"
                   category="general"
                 />
@@ -41,7 +41,7 @@ const App =()=>{
                 <News
                   setProgress={setProgress} apiKey={apiKey}
                   key="Business"
-                  pageSize={pageSize}
+                  
                   country="in"
                   category="business"
                 />
@@ -53,7 +53,7 @@ const App =()=>{
                 <News
                   setProgress={setProgress} apiKey={apiKey}
                   key="Entertainment"
-                  pageSize={pageSize}
+                  
                   country="in"
                   category="entertainment"
                 />
@@ -66,7 +66,7 @@ const App =()=>{
                 <News
                   setProgress={setProgress} apiKey={apiKey}
                   key="science"
-                  pageSize={pageSize}
+                  
                   country="in"
                   category="science"
                 />
@@ -78,7 +78,7 @@ const App =()=>{
                 <News
                   setProgress={setProgress} apiKey={apiKey}
                   key="Sports"
-                  pageSize={pageSize}
+                  
                   country="in"
                   category="sports"
                 />
@@ -90,7 +90,7 @@ const App =()=>{
                 <News
                   setProgress={setProgress} apiKey={apiKey}
                   key="tech"
-                  pageSize={pageSize}
+                  
                   country="in"
                   category="tech"
                 />

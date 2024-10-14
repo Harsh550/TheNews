@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
@@ -9,10 +9,12 @@ const News = (props) => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  
+  // useRef to track if the data has already been fetched
+  const alreadyFetched = useRef(false);
 
   News.defaultProps = {
     country: "in",
-    pageSize: 8,
     category: "general",
   };
 
@@ -24,14 +26,21 @@ const News = (props) => {
 
   const updateNews = async () => {
     props.setProgress(10);
-    
     setLoading(true);
-
+    
     try {
       // Fetch 6 articles on first load (2 pages of 3 articles each)
-      const url1 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(props.apiKey)}&language=en&limit=3&page=1&categories=${encodeURIComponent(props.category)}`;
+      const url1 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
+        props.apiKey
+      )}&language=en&limit=3&page=1&categories=${encodeURIComponent(
+        props.category
+      )}`;
 
-      const url2 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(props.apiKey)}&language=en&limit=3&page=2&categories=${encodeURIComponent(props.category)}`;
+      const url2 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
+        props.apiKey
+      )}&language=en&limit=3&page=2&categories=${encodeURIComponent(
+        props.category
+      )}`;
 
       // First API request for 3 articles
       let response1 = await fetch(url1);
@@ -44,26 +53,32 @@ const News = (props) => {
       let parsedData2 = await response2.json();
       props.setProgress(70);
 
+      const combinedArticles = [...new Set([...parsedData1.data, ...parsedData2.data])];
+
       // Combine both responses and update the state
-      setArticles([...parsedData1.data, ...parsedData2.data]);
+      setArticles(combinedArticles);
       setTotalResults(parsedData1.meta.found); // Assuming both have the same total results
 
       setLoading(false);
       props.setProgress(100);
-      console.log(parsedData1.data);
-      console.log(parsedData2.data);
+      console.log(combinedArticles);
     } catch (error) {
       console.error("Error fetching the news:", error);
       setLoading(false);
       props.setProgress(100);
-      
-
     }
   };
 
   useEffect(() => {
-    updateNews();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchData = async () => {
+      if (!alreadyFetched.current) {
+        alreadyFetched.current = true; // Mark as fetched to prevent multiple API calls
+        await updateNews();
+      }
+    };
+    
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.category, props.country]);
 
   const fetchMoreData = async () => {
@@ -79,12 +94,13 @@ const News = (props) => {
 
     setArticles(articles.concat(parsedData.data));
     setTotalResults(parsedData.meta.found);
+    console.log(parsedData.data);
   };
 
   return (
     <>
       <h1 className="text-center" style={{ marginTop: "80px" }}>
-        News Monkey - {props.category.charAt(0).toUpperCase() + props.category.slice(1)}
+        News - {props.category.charAt(0).toUpperCase() + props.category.slice(1)}
       </h1>
 
       {loading && page === 1 && <Spinner />}
@@ -121,4 +137,5 @@ const News = (props) => {
     </>
   );
 };
+
 export default News;
