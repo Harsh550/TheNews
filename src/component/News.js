@@ -58,6 +58,7 @@ const News = (props) => {
       // Combine both responses and update the state
       setArticles(combinedArticles);
       setTotalResults(parsedData1.meta.found); // Assuming both have the same total results
+      setPage(2); 
 
       setLoading(false);
       props.setProgress(100);
