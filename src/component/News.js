@@ -9,8 +9,6 @@ const News = (props) => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  
-  // useRef to track if the data has already been fetched
   const alreadyFetched = useRef(false);
 
   News.defaultProps = {
@@ -27,9 +25,8 @@ const News = (props) => {
   const updateNews = async () => {
     props.setProgress(10);
     setLoading(true);
-    
+
     try {
-      // Fetch 6 articles on first load (2 pages of 3 articles each)
       const url1 = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
         props.apiKey
       )}&language=en&limit=3&page=1&categories=${encodeURIComponent(
@@ -42,27 +39,26 @@ const News = (props) => {
         props.category
       )}`;
 
-      // First API request for 3 articles
       let response1 = await fetch(url1);
       props.setProgress(30);
       let parsedData1 = await response1.json();
       props.setProgress(50);
 
-      // Second API request for 3 more articles
       let response2 = await fetch(url2);
       let parsedData2 = await response2.json();
       props.setProgress(70);
 
-      const combinedArticles = [...new Set([...parsedData1.data, ...parsedData2.data])];
+      // Combine and deduplicate articles
+      const combinedArticles = [...parsedData1.data, ...parsedData2.data].filter(
+        (article, index, self) =>
+          index === self.findIndex((a) => a.url === article.url)
+      );
 
-      // Combine both responses and update the state
       setArticles(combinedArticles);
-      setTotalResults(parsedData1.meta.found); // Assuming both have the same total results
-      setPage(2); 
-
+      setTotalResults(parsedData1.meta.found);
+      setPage(2);
       setLoading(false);
       props.setProgress(100);
-      console.log(combinedArticles);
     } catch (error) {
       console.error("Error fetching the news:", error);
       setLoading(false);
@@ -73,11 +69,11 @@ const News = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       if (!alreadyFetched.current) {
-        alreadyFetched.current = true; // Mark as fetched to prevent multiple API calls
+        alreadyFetched.current = true;
         await updateNews();
       }
     };
-    
+
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.category, props.country]);
@@ -86,16 +82,22 @@ const News = (props) => {
     const nextPage = page + 1;
     setPage(nextPage);
 
-    // Fetch 3 more articles
     const url = `https://api.thenewsapi.com/v1/news/all?api_token=${encodeURIComponent(
-      props.apiKey)}&language=en&limit=3&page=${nextPage}&categories=${encodeURIComponent(props.category)}`;
+      props.apiKey
+    )}&language=en&limit=3&page=${nextPage}&categories=${encodeURIComponent(
+      props.category
+    )}`;
 
     let data = await fetch(url);
     let parsedData = await data.json();
 
-    setArticles(articles.concat(parsedData.data));
+    const newArticles = parsedData.data.filter(
+      (newArticle) =>
+        !articles.some((existing) => existing.url === newArticle.url)
+    );
+
+    setArticles((prevArticles) => [...prevArticles, ...newArticles]);
     setTotalResults(parsedData.meta.found);
-    console.log(parsedData.data);
   };
 
   return (
@@ -117,21 +119,25 @@ const News = (props) => {
       >
         <div className="container text-center">
           <div className="row">
-            {articles.map((element, index) => {
-              return (
-                <div className="col-lg-4 col-md-6 mb-4" key={index}>
-                  <NewsItem
-                    title={element.title ? element.title.slice(0, 50) : ""}
-                    description={element.description ? element.description.slice(0, 80) : ""}
-                    imageUrl={element.image_url ? element.image_url : "https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"}
-                    newsUrl={element.url}
-                    author={element.author || "Unknown"}
-                    date={element.published_at}
-                    source={element.source}
-                  />
-                </div>
-              );
-            })}
+            {articles.map((element, index) => (
+              <div className="col-lg-4 col-md-6 mb-4" key={index}>
+                <NewsItem
+                  title={element.title ? element.title.slice(0, 50) : ""}
+                  description={
+                    element.description ? element.description.slice(0, 80) : ""
+                  }
+                  imageUrl={
+                    element.image_url
+                      ? element.image_url
+                      : "https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+                  }
+                  newsUrl={element.url}
+                  author={element.author || "Unknown"}
+                  date={element.published_at}
+                  source={element.source}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </InfiniteScroll>
